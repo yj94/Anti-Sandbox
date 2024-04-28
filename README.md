@@ -270,8 +270,6 @@ bool check_mouse() {
 }
 ```
 
-
-
 ## 歪门邪道
 
 还有其他奇奇怪怪的反沙箱方法
@@ -304,3 +302,7 @@ https://github.com/yj94/Anti-Sandbox
 * https://github.com/LordNoteworthy/al-khaser
 * https://attack.mitre.org/techniques/T1497
 * https://evasions.checkpoint.com
+
+# 声明
+
+本项目首发于先知社区，转载请标明出处！https://xz.aliyun.com/t/14381
