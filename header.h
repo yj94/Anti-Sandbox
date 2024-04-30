@@ -5,4 +5,6 @@
 #include <string>
 #include <regex>
 #include "httplib.h"
+#include "skCrypter.h"
+//用于隐藏控制台窗口
 #pragma comment(linker,"/subsystem:\"Windows\" /entry:\"mainCRTStartup\"")

