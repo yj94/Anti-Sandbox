@@ -4,7 +4,7 @@
 std::string charToString(const char* str) {
     return std::string(str);
 }
-//检测微步释放路径
+//检测微步释放路径 2024年7月26日 微步更新了 更简单的释放路径
 std::string workingdir()
 {
     char buf[256];
@@ -12,15 +12,12 @@ std::string workingdir()
     return std::string(buf);
 }
 bool check_run_path() {
-    std::string test(workingdir());
-    std::regex pattern("^C:\\\\[A-Za-z0-9_]+");
-    if (std::regex_match(test, pattern)) {
+    std::string test = workingdir();
+    std::string desktop_path = "C:\\Users\\Administrator\\Desktop";
+    if (test == desktop_path) {
         return false;
-        exit(0);
     }
-    else {
-        return true;
-    }
+    return true;
 }
 //WaitForSingleObject延迟，利用拼多多时间戳api判断差值
 bool check_time() {
